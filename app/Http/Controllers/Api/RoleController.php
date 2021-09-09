@@ -59,9 +59,16 @@ class RoleController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request)
     {
-        //
+        Validator::make($request->only('name','slug','description'), [
+            'name' => ['required', 'min:3']
+        ])->validate();
+
+
+        if ($request->has('id')) {
+            Role::find($request->input('id'))->update($request->all());
+        }
     }
 
     /**

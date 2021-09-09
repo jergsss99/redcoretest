@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -18,7 +19,7 @@ class UserController extends Controller
         Validator::make($request->all(), [
             'name' => ['required', 'max:255', 'unique:users'],
             'email' => ['required','unique:users','email'],
-            'password' => ['confirmed', 'required', 'min:8']
+            'password' => ['required', 'min:8']
         ])->validate();
 
 
@@ -38,9 +39,9 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(User $usersApi)
     {
-        //
+        return (new UserResource($usersApi))->response();
     }
 
     /**
@@ -54,8 +55,8 @@ class UserController extends Controller
     {
         Validator::make($request->all(), [
             'name' => ['required', 'max:255'],
-            'email' => ['required','unique:users','email'],
-            'password' => ['confirmed', 'required', 'min:8']
+            'email' => ['required','email'],
+            //'password' => ['confirmed', 'required', 'min:8']
         ])->validate();
 
 

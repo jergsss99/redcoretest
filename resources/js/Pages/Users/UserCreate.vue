@@ -71,7 +71,7 @@
                     </div>
                 </div>
 
-
+                <jet-validation-errors class="mb-4" />
                 <form @submit.prevent="store">
                     <div class="">
                         <div class="mb-4">
@@ -126,6 +126,7 @@
 <script>
 import AppLayout from '../../Layouts/AppLayout'
 import Welcome from '../../Jetstream/Welcome'
+import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import { InertiaLink,
             createInertiaApp} from '@inertiajs/inertia-vue3';
 
@@ -134,38 +135,35 @@ export default {
         AppLayout,
         Welcome,
         InertiaLink,
+        JetValidationErrors
 
         },
-    props: ['data','roles'],
+    props: ['data','roles', 'errors'],
         data() {
             return {
                 showAlert: false,
                 showUserInfo: false,
 
-                user:{
+                user: this.$inertia.form({
                     'role_ids' : [],
                     'name': '',
                     'email': '',
                     'password' : '',
                     'confirm_password' : '',
 
-                },
-                errors: {},
+                })
             }
         },
 
     methods: {
 
         store() {
-            axios.post(this.route('users-api.store'),this.user)
-            .then(response =>
-            {this.showAlert=true,
-            this.showUserInfo = true,
-            this.errors = null;
-            })
-            .catch(e => {
-                this.errors = e.response.data.errors,
-                this.showAlert= false;
+
+            this.user.post(this.route('users-api.store'), {
+                onSuccess: () => {
+                    this.showAlert = true,
+                    this.showUserInfo = true
+                    }
             });
         },
 

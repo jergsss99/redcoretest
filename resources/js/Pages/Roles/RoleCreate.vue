@@ -23,7 +23,7 @@
                     </div>
                     </div>
 
-                   <div v-if="$page.errors" class="flex items-center bg-red-500 border-l-4 border-red-700 py-2 px-3 shadow-md mb-2" v-for="error in errors">
+                   <div class="flex items-center bg-red-500 border-l-4 border-red-700 py-2 px-3 shadow-md mb-2" v-for="error in errors">
                      <!-- icons -->
                         <div class="text-red-500 rounded-full bg-white mr-3">
                         <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-x" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -33,14 +33,14 @@
                         </div>
                         <!-- message -->
                         <div class="text-white max-w-xs ">
-                            {{$page.errors[0]}}
+                            {{error[0]}}
                         </div>
                     </div>
 
                 </div>
 
 
-                 <jet-validation-errors class="mb-4" />
+                 <!-- <jet-validation-errors class="mb-4" /> -->
                 <form @submit.prevent="store">
                     <div class="">
                         <div class="mb-4">
