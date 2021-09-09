@@ -125,11 +125,13 @@ export default {
 
         deleteRole(data){
             this.showAlert= false;
-            confirm("Are you sure you to delete?");
-             axios.delete(this.route('roles-api.destroy', data.id))
+            var del = confirm("Are you sure you to delete?");
+            if(del == true){
+            axios.delete(this.route('roles-api.destroy', data.id))
             .then(response =>
                 this.showAlert=true,
                 );
+            }else{}
         },
     },
 

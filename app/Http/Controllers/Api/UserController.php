@@ -19,9 +19,8 @@ class UserController extends Controller
         Validator::make($request->all(), [
             'name' => ['required', 'max:255', 'unique:users'],
             'email' => ['required','unique:users','email'],
-            'password' => ['required', 'min:8']
+            'password' => ['required', 'min:8', 'confirmed']
         ])->validate();
-
 
 
         $user = new User;
@@ -31,26 +30,16 @@ class UserController extends Controller
         $user->save();
 
         $user->roles()->sync($request->role_ids);
+        return redirect('/users');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show(User $usersApi)
     {
         return (new UserResource($usersApi))->response();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(Request $request, $id)
     {
         Validator::make($request->all(), [
@@ -66,14 +55,10 @@ class UserController extends Controller
         $user->roles()->sync($request->role_ids);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
         User::find($id)->delete();
+        
     }
 }

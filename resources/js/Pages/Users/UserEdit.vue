@@ -19,21 +19,9 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center bg-red-500 border-l-4 border-red-700 py-2 px-3 shadow-md mb-2" v-for="error in errors">
-
-                     <!-- icons -->
-                        <div class="text-red-500 rounded-full bg-white mr-3">
-                        <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-x" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
-                        <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
-                        </svg>
-                        </div>
-                        <!-- message -->
-                        <div class="text-white max-w-xs ">
-                            {{error[0]}}
-                        </div>
-                    </div>
+                    
                 </div>
+                <jet-validation-errors class="mb-4" />
                 <form @submit.prevent="store">
                     <div class="">
                         <div class="mb-4">
@@ -91,6 +79,7 @@
 <script>
     import AppLayout from '../../Layouts/AppLayout'
     import Welcome from '../../Jetstream/Welcome'
+    import JetValidationErrors from '@/Jetstream/ValidationErrors'
     import { InertiaLink,
             createInertiaApp} from '@inertiajs/inertia-vue3';
 
@@ -99,6 +88,7 @@ export default {
         AppLayout,
         Welcome,
         InertiaLink,
+        JetValidationErrors
 
         },
     props: ['user', 'roles'],
@@ -110,7 +100,7 @@ export default {
                     'name' : null,
                     'email' : null
                 },
-                errors: {},
+                errors:{}
 
             }
         },
@@ -133,11 +123,19 @@ export default {
                 this.showAlert= false;
             });
 
-            axios.delete(this.route('users-api.destroy', user.id))
-            .then(response =>
-                this.showAlert=true,
-                );
+            
         },
+
+        deleteUser(user){
+            this.showAlert= false;
+            var del = confirm("Are you sure you to delete?");
+            if(del == true){
+                axios.delete(this.route('users-api.destroy', user.id))
+                .then(response =>
+                    this.showAlert=true,
+                    );
+            } else{}
+        }
     },
 
 

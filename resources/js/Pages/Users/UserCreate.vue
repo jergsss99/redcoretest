@@ -91,7 +91,7 @@
                             <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" id="exampleFormControlInput1" placeholder="Enter Name" v-model="user.name" required>
                             <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" id="exampleFormControlInput1" placeholder="Enter Email" v-model="user.email" required>
                             <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" id="exampleFormControlInput1" placeholder="Enter Password" v-model="user.password" required>
-                            <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" id="exampleFormControlInput1" placeholder="Confirm Password" v-model="user.confirm_password" required>
+                            <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" id="exampleFormControlInput1" placeholder="Confirm Password" v-model="user.password_confirmation" required>
 
                         </div>
 
@@ -126,7 +126,6 @@
 <script>
 import AppLayout from '../../Layouts/AppLayout'
 import Welcome from '../../Jetstream/Welcome'
-import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import { InertiaLink,
             createInertiaApp} from '@inertiajs/inertia-vue3';
 
@@ -135,10 +134,9 @@ export default {
         AppLayout,
         Welcome,
         InertiaLink,
-        JetValidationErrors
 
         },
-    props: ['data','roles', 'errors'],
+    props: ['data','roles'],
         data() {
             return {
                 showAlert: false,
@@ -148,10 +146,11 @@ export default {
                     'role_ids' : [],
                     'name': '',
                     'email': '',
-                    'password' : '',
-                    'confirm_password' : '',
+                    'password' : null,
+                    'password_confirmation' : null,
 
-                })
+                }),
+                errors: {}
             }
         },
 
@@ -159,11 +158,16 @@ export default {
 
         store() {
 
-            this.user.post(this.route('users-api.store'), {
-                onSuccess: () => {
-                    this.showAlert = true,
-                    this.showUserInfo = true
-                    }
+            axios.post(this.route('users-api.store'),this.user)
+            .then(response =>
+            {
+                this.showAlert=true,
+                this.showUserInfo = true,
+                this.errors = null;
+            })
+            .catch(e => {
+                this.errors = e.response.data.errors,
+                this.showAlert= false;
             });
         },
 
